@@ -1,7 +1,12 @@
-import React, { useState } from 'react';
-import { List, ListItem, Card, Chip } from '@material-tailwind/react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { AvatarDefault } from '../avatar/avatar';
+import React, { useState } from "react";
+import { List, ListItem, Card, Chip, IconButton,  Collapse, Button
+} from "@material-tailwind/react";
+import { NavLink, useLocation } from "react-router-dom";
+import { AvatarDefault } from "../avatar/avatar";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { CrearCategorias } from "../form/formulario";
+import categorias from "../../pages/categorias/categorias";
 
 const Sidebar = () => {
   const [showDevOps, setShowDevOps] = useState(false);
@@ -11,17 +16,43 @@ const Sidebar = () => {
     setShowDevOps(!showDevOps);
   };
 
+  const [dialogOpen, setDialogOpen] = useState(false); 
+  const [open, setOpen] = React.useState(false);
+ 
+  const toggleOpen = () => setOpen((cur) => !cur);
+
+  const renderRoutes = categorias.map(
+    ({name, key, route})=>{
+      let returnValue;
+
+      returnValue=(
+       
+        <NavLink key={key}       exact="true"
+        to={route} className={location.pathname === route ? "text-white" : "text-gray-400"}>
+          <ListItem color="transparent" ripple={true}>
+              {name}
+          </ListItem>
+        </NavLink>
+      
+
+      )
+      return returnValue;
+  
+    }
+  );
+
+
   return (
     <div className="flex">
-    <div className="w-full h-screen max-w-[20rem] p-4 shadow-xl bg-black">
-    <AvatarDefault/>
+      <div className="w-full h-screen max-w-[20rem] p-4 shadow-xl bg-gray-900">
+        <AvatarDefault />
 
         <div className="p-4">
           <List className="mb-4">
             <ListItem color="transparent">
               <Card>
                 <List>
-                  <ListItem ripple="dark" onClick={toggleDevOps}>
+                  <ListItem ripple={true} onClick={toggleDevOps}>
                     PERFIL
                   </ListItem>
                   {showDevOps && (
@@ -42,34 +73,47 @@ const Sidebar = () => {
             </ListItem>
           </List>
           <List>
-            <ListItem color="transparent" ripple="dark">
-              <NavLink to='/Dashboard' exact className={location.pathname === '/Dashboard' ? 'text-white' : 'text-gray-400'}>
-                Categorias
-              </NavLink>
+            <div>
+
+            <ListItem color="transparent" onClick={toggleOpen} ripple={true }>
+              Categorias
+              <IconButton 
+                style={{backgroundColor:'gray'}}
+                className="rounded-full ml-auto "
+                onClick={() => setDialogOpen(true)}
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </IconButton>
             </ListItem>
-            <ListItem color="transparent" ripple="dark">
-              <NavLink to='/analytics' exact className={location.pathname === '/analytics' ? 'text-white' : 'text-gray-400'}>
-                Analytics
-              </NavLink>
-            </ListItem>
-            <ListItem color="transparent" ripple="dark">
-              <NavLink to='/profile' exact className={location.pathname === '/profile' ? 'text-white' : 'text-gray-400'}>
-                Profile
-              </NavLink>
-            </ListItem>
-            <NavLink to='/devops' exact className={location.pathname === '/devops' ? 'text-white' : 'text-gray-400'}>
-              <ListItem color="transparent" ripple="dark">
-                  DevOps
+           
+            <Collapse open={open}>
+             <List>
+             {renderRoutes}
+             </List>
+              </Collapse>
+
+            </div>
+            
+            <NavLink
+              to="/"
+              className={
+                location.pathname === "/" ? "text-white" : "text-gray-400"
+              }
+              exact="true"
+              >
+              <ListItem color="transparent" ripple={true}>
+                Home
               </ListItem>
             </NavLink>
-            <NavLink to='/' className={location.pathname === '/' ? 'text-white' : 'text-gray-400'} exact>
-              <ListItem color="transparent" ripple="dark">
-                  Home
-              </ListItem>
-            </NavLink>
-            <NavLink to='/login' className={location.pathname === '/' ? 'text-white' : 'text-gray-400'} exact>
-              <ListItem color="transparent" ripple="dark">
-                  Salir
+            <NavLink
+              to="/login"
+              className={
+                location.pathname === "/login" ? "text-white" : "text-gray-400"
+              }
+              exact="true"
+              >
+              <ListItem color="transparent" ripple={true}>
+                Salir
               </ListItem>
             </NavLink>
           </List>
@@ -80,6 +124,7 @@ const Sidebar = () => {
           {/* Contenido de la columna DevOps */}
         </div>
       )}
+       <CrearCategorias open={dialogOpen} setOpen={setDialogOpen} />
     </div>
   );
 };

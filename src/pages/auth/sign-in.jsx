@@ -48,7 +48,7 @@ export function FormLogin() {
           </CardBody>
           <CardFooter className="pt-0">
 
-            <NavLink to='/devops'>
+            <NavLink to='/'>
             <Button variant="gradient" fullWidth >
               Sign In
             </Button>

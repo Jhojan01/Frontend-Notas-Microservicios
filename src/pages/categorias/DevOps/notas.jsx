@@ -1,9 +1,11 @@
-import { MainLayout } from "../../Layouts/layouts";
-import { Typography, Input, List, ListItem} from "@material-tailwind/react";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import React, { useState } from "react";
-import SelectedCard from "./main";
-
+import { MainLayout } from "../../../Layouts/layouts";
+import { Typography, Input, List, ListItem } from "@material-tailwind/react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { IconButton } from "@material-tailwind/react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { CrearNota } from "../components/editor";// Importar el componente MessageDialog
 
 const data = [
   {
@@ -42,50 +44,69 @@ const data = [
 ];
 
 function DevOps() {
-    const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [dialogOpen, setDialogOpen] = useState(false); // Estado para controlar si el diálogo está abierto o cerrado
+
 
   return (
     <MainLayout>
-      <div
-        className="h-screen bg-gray-100  "
-        style={{ backgroundColor: "#eceff1", width: "30%" }}
+      <div className="flex h-screen"
+        style={{ backgroundColor: "#D6D6D6" }}
+
       >
-        <div className="p-6" >
+        {/* Lista de tarjetas */}
+        <div className="p-6 overflow-y-auto" style={{ maxWidth: '450px' }}>
+          <div className="flex">
           <Typography variant="h2">DevOps</Typography>
-          <div className="p-2 " style={{marginTop:'50px'}}>
-            <Input
+          <IconButton  className="rounded-full ml-auto"onClick={() => setDialogOpen(true)} style={{backgroundColor:'#4F4F4F'}}> 
+          <FontAwesomeIcon icon={faPlus}/>
+           </IconButton>
+
+          </div>
+          <div className="p-2" >
+            <Input style={{ backgroundColor: '#f3f3f3 ' }}
               icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               label="Search"
             />
-            <div className="grid grid-cols-1 "style={{marginTop:'40px'}}>
+            <List style={{ marginBottom: '0', marginTop: '0' }} >
               {data.map((item, index) => (
-                <List >
-                  <ListItem style={{marginBottom:'0', marginTop:'0', padding:'0', gap:'0'}} onClick={() => setSelectedItem(item)}>
-                    <div
-                    
-                      key={index}
-                      className="bg-white shadow-md rounded-lg p-6 flex flex-col"
-                    >
-                      <p className="text-gray-400 relative left-4 right-0">
-                        {item.date.toLocaleDateString()}
-                      </p>
-                      <h2 className="text-xl font-bold mb-2">{item.title}</h2>
-                      <p className="text-gray-600 mb-4 h-12 overflow-hidden">
-                        {item.definition}
-                      </p>
-                    </div>
-                  </ListItem>
-                </List>
+                <ListItem
+                  key={index}
+                  onClick={() => setSelectedItem(item)}
+                  ripple={true}
+                  style={{ margin: '0', height: '100%' }}
+                >
+                  <div className="bg-white rounded-lg p-6 flex flex-col" style={{ margin: '0', height: '100%' }}   >
+                    <p className="text-gray-400 relative left-4 right-0">
+                      {item.date.toLocaleDateString()}
+                    </p>
+                    <h2 className="text-xl font-bold mb-2">{item.title}</h2>
+                    <p className="text-gray-600 mb-4 h-12 overflow-hidden">
+                      {item.definition}
+                    </p>
+                  </div>
+                </ListItem>
               ))}
-            </div>
-            <SelectedCard
-        item={selectedItem}
-        selectedItem={selectedItem}
-        onClose={() => setSelectedItem(null)}
-      />
+            </List>
           </div>
         </div>
+        {/* Información de la tarjeta seleccionada */}
+        {selectedItem && (
+          <div className="p-6 overflow-y-auto"
+            style={{ backgroundColor: '#F3F3F3' }}
+          >
+            <p className=' text-blue-gray-200' style={{ color: 'GrayText' }}> {selectedItem.date.toLocaleDateString()}</p>
+            <Typography variant="h2">{selectedItem.title}</Typography>
+            <div className="p-6">
+              <Typography variant="h4">Definicion </Typography>
+              <p>{selectedItem.definition}</p>
+              <Typography variant="h4">contenido </Typography>
+              <p>{selectedItem.content}</p>
+            </div>
+          </div>
+        )}
       </div>
+      <CrearNota open={dialogOpen} setOpen={setDialogOpen} />
     </MainLayout>
   );
 }

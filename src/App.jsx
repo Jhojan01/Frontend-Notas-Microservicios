@@ -1,8 +1,7 @@
 
 import {Routes, Route} from 'react-router-dom'
 import Home from './pages/Home/home'
-import DevOps from './pages/DevOps/notas'
-import Sidebar from './components/sidebar/sidebar'
+import DevOps from './pages/categorias/DevOps/notas'
 import { FormLogin } from './pages/auth/sign-in'
 
 export default function App(){
@@ -12,7 +11,7 @@ export default function App(){
     <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/login' element={<FormLogin/>}/>
-      <Route path ='/devops' element={<DevOps/>} />
+      <Route path ='/categorias/devops'element={<DevOps/>} />
     </Routes>
     </>
 
